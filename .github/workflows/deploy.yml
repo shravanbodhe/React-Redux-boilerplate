@@ -1,0 +1,58 @@
+# Frontend CI/CD pipeline
+# Purpose:
+# - Runs automatically when code is pushed to the main branch
+# - Connects to AWS using GitHub Secrets
+# - Tells the EC2 server to pull latest code, build the frontend, copy the build to nginx, and restart nginx
+
+name: Deploy Frontend to EC2
+
+# Trigger:
+# - This workflow runs only when code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    # GitHub provides a temporary Ubuntu runner to execute this workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1:
+      # Authenticate GitHub Actions with AWS.
+      # These secrets must be added in the GitHub repository settings.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      # Step 2:
+      # Send deployment commands to the EC2 instance through AWS SSM.
+      # Why SSM:
+      # - no manual SSH login needed
+      # - same style as the backend deployment pipeline
+      #
+      # Commands executed on EC2:
+      # 1. go to frontend project folder
+      # 2. pull latest code from GitHub
+      # 3. install dependencies
+      # 4. build production files into dist/
+      # 5. copy built files to nginx web root
+      # 6. restart nginx so latest frontend is served
+      - name: Deploy frontend on EC2
+        run: |
+          aws ssm send-command \
+            --instance-ids "i-0ab88b1db59576571" \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=[
+              "cd /home/ubuntu/React-Redux-boilerplate",
+              "git pull origin main",
+              "npm install",
+              "npm run build",
+              "sudo mkdir -p /var/www/react-redux-boilerplate",
+              "sudo cp -r dist/* /var/www/react-redux-boilerplate/",
+              "sudo systemctl restart nginx"
+            ]'
