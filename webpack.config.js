@@ -22,6 +22,12 @@ module.exports = {
     port: 3000, // Port number: Specifies the port on which the development server will run. Default is 8080, but here it's set to 3000 for React apps.
     open: true, // Automatically open browser: Opens the default browser automatically when the server starts. Useful for quick development feedback.
     historyApiFallback: true, // For SPA routing: Enables fallback to index.html for all routes. Essential for Single Page Applications (SPAs) like React Router.
+    proxy: [
+      {
+        context: ['/api'],
+        target: 'http://localhost:5000',
+      },
+    ],
     //  Without this, refreshing a page like /dashboard would return 404. With it, the server serves index.html, allowing React Router to handle the routing client-side. 
     // Example: Navigating to http://localhost:3000/dashboard directly or refreshing the page will load index.html, and React Router will render the appropriate component.
 
