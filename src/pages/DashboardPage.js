@@ -15,10 +15,7 @@ function DashboardPage() {
         >
           Home
         </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('about')}
-        >
+        <button type="button" onClick={() => setActiveTab('about')}>
           About Us
         </button>
       </div>

@@ -9,7 +9,7 @@ function LoginPage() {
     password: '',
   });
 
-  const [login, { isLoading, error, data }] = useLoginMutation();
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const handleChange = (e) => {
     setFormData({

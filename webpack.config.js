@@ -28,9 +28,8 @@ module.exports = {
         target: 'http://localhost:5000',
       },
     ],
-    //  Without this, refreshing a page like /dashboard would return 404. With it, the server serves index.html, allowing React Router to handle the routing client-side. 
+    //  Without this, refreshing a page like /dashboard would return 404. With it, the server serves index.html, allowing React Router to handle the routing client-side.
     // Example: Navigating to http://localhost:3000/dashboard directly or refreshing the page will load index.html, and React Router will render the appropriate component.
-
   },
 
   // Module: Rules for processing files
@@ -50,7 +49,7 @@ module.exports = {
 
   // Resolve: Automatically resolve file extensions
   resolve: {
-    extensions: ['.js'], // Auto-add .js extension: When importing modules, webpack will automatically try appending '.js' if no extension is specified. 
+    extensions: ['.js'], // Auto-add .js extension: When importing modules, webpack will automatically try appending '.js' if no extension is specified.
     // Allows cleaner imports like 'import Component from './Component'' instead of './Component.js'. Can add more extensions like ['.js', '.jsx'] for React or TypeScript files.
   },
 
