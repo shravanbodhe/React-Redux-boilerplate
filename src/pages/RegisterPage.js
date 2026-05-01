@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '../services/authApi';
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
   });
 
-  const [register, { isLoading, error, data }] = useRegisterMutation();
+  const [register, { isLoading, error }] = useRegisterMutation();
 
   const handleChange = (e) => {
     setFormData({
@@ -20,7 +21,11 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(formData);
+    const response = await register(formData);
+
+    if (response.data) {
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -52,7 +57,6 @@ function RegisterPage() {
         <button type="button">Go to Login</button>
       </Link>
 
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
       {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
     </div>
   );
